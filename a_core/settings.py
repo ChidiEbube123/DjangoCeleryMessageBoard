@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     # My apps
     'a_home',
     'a_users',
+    'django_celery_beat'
 ]
 
 SITE_ID = 1
@@ -146,6 +147,15 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/'
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-ACCOUNT_LOGIN_METHODS = {'email'}
-ACCOUNT_EMAIL_REQUIRED = True
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST='smtp.gmail.com'
+EMAIL_HOST_USER='fleektyre@gmail.com'
+EMAIL_HOST_PASSWORD='wirtbvakhwphsauf'
+EMAIL_PORT=587
+EMAIL_USE_TLS=True #transport layer security
+DEFAULT_FROM_EMAIL=f'Chidiiiii'
+ACCOUNT_EMAIL_SUBJECT_PREFIX=''
+
+CELERY_BROKER_URL='redis://localhost:6379/0'
+#CELERY_CONFIG
+CELERY_BROKER_CONNECTION_RESTART_ON_STARTUP=True
