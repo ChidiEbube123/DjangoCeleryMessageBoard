@@ -1,0 +1,28 @@
+{% extends "layouts/blank.html" %}
+{% block content %}
+<wrapper class="block min-h-screen flex flex-col items-center justify-center bg-gray-100 px-6 py-8">
+
+  <div class="w-full max-w-3xl bg-white shadow-lg rounded-xl p-6 mb-8">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Create a New Subreddit</h2>
+        <form method="POST" action="create_messageboard"  class="space-y-4">
+            {% csrf_token %}
+            {{form}}
+            <button type="submit" class="px-6 py-2 bg-green-600 text-white text-sm font-medium rounded-lg shadow-md hover:bg-green-700 transition">Create</button>
+        </form>
+    </div>
+   
+</wrapper>
+
+<script>
+    function scrollToBottom() {
+        const container = document.getElementById('messages');
+        if (container) {
+            container.scrollTop = container.scrollHeight;
+        }
+    }
+
+    window.onload = function() {
+        scrollToBottom();
+    };
+</script>
+{% endblock %}

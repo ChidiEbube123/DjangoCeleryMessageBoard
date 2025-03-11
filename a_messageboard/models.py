@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 # Create your models here.
 class MessageBoard(models.Model):
     name = models.CharField(max_length=255, blank=True, null=True)
+    image=models.ImageField(upload_to='images', default='default.avif')
     subscribers = models.ManyToManyField(User, related_name="messageboard", blank=True, null=True)
     
     def save(self, *args, **kwargs):
@@ -21,7 +22,7 @@ class MessageBoard(models.Model):
 class Message(models.Model):
     messageboard=models.ForeignKey(MessageBoard, on_delete=models.CASCADE, related_name="messages")
     author=models.ForeignKey(User, on_delete=models.CASCADE, related_name="messages")
-    body=models.TextField(max_length=200)
+    body=models.TextField(max_length=200, null=True)
     created=models.DateTimeField(auto_now_add=True)
 
     class Meta:

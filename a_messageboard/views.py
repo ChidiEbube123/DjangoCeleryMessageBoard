@@ -7,9 +7,22 @@ import threading
 from .tasks import *
 from django.contrib.sites.models import Site
 from django.core.mail import EmailMessage
+
+def aal_subs(request):
+    message_boards=MessageBoard.objects.all()
+    return render(request, 'a_messageboard/messageboards.html', {'message_boards':message_boards})
+def create_messageboard(request):
+    if request.method == 'POST':
+        form = MessageBoardCreateForm(request.POST, request.FILES)
+        if form.is_valid():
+            messageboard = form.save()
+            return redirect('messageboard', messageboard.id)
+    else:
+        form = MessageBoardCreateForm()
+    return render(request, 'a_messageboard/create_messageboard.html', {'form': form})
 @login_required
-def messageboard_view(request):
-    message_board=get_object_or_404(MessageBoard, id=8)
+def messageboard_view(request, id):
+    message_board=get_object_or_404(MessageBoard, id=id)
     form=MessageCreateForm()
     if request.method=="POST":
         if request.user in message_board.subscribers.all():
@@ -26,9 +39,9 @@ def messageboard_view(request):
 
     context={'messageboard':message_board, 'form':form}
     return render(request, 'a_messageboard/index.html', context)
-
-def messageboard_subscribe(request):
-    message_board=get_object_or_404(MessageBoard, id=8)
+# add id here
+def messageboard_subscribe(request, id):
+    message_board=get_object_or_404(MessageBoard, id=id)
     if request.user not in message_board.subscribers.all():
         message_board.subscribers.add(request.user)
         messages.success(request, "Successfully subscribed")
@@ -36,7 +49,7 @@ def messageboard_subscribe(request):
          message_board.subscribers.remove(request.user)
          messages.success(request, "Successfully subscribed")
 
-    return redirect('messageboard')
+    return redirect('messageboard', id=id)
 
 
 def send_email(message):
