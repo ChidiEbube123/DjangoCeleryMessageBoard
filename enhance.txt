@@ -1,3 +1,4 @@
 Add Multi sub reddits
 Ability to enter diff ones
 S3 Thing
+Add error messgae

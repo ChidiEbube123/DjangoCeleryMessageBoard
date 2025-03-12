@@ -20,7 +20,9 @@ from django.conf.urls.static import static
 from django.conf import settings
 from a_users.views import profile_view
 from a_home.views import *
+from django.conf.urls import handler500, handler404,handler400,handler403
 
+# Custom 500 error view
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('allauth.urls')),

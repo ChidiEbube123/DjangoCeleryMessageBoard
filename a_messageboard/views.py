@@ -7,10 +7,18 @@ import threading
 from .tasks import *
 from django.contrib.sites.models import Site
 from django.core.mail import EmailMessage
+from django.views.decorators.cache import cache_page
+from django.core.cache import cache
 
+@login_required
 def aal_subs(request):
-    message_boards=MessageBoard.objects.all()
+    message_boards = cache.get('message_boards') 
+    if not message_boards:
+        message_boards = MessageBoard.objects.all()  # Expensive DB query
+        cache.set('message_boards', message_boards, timeout=60*10) 
     return render(request, 'a_messageboard/messageboards.html', {'message_boards':message_boards})
+
+@cache_page(60 * 60)  # Cache for 15 minutes
 def create_messageboard(request):
     if request.method == 'POST':
         form = MessageBoardCreateForm(request.POST, request.FILES)
@@ -22,7 +30,10 @@ def create_messageboard(request):
     return render(request, 'a_messageboard/create_messageboard.html', {'form': form})
 @login_required
 def messageboard_view(request, id):
-    message_board=get_object_or_404(MessageBoard, id=id)
+    message_board=cache.get('chats')
+    if not message_board:
+        message_board=get_object_or_404(MessageBoard,id=id)
+        cache.set('chats', message_board, timeout=60*10)
     form=MessageCreateForm()
     if request.method=="POST":
         if request.user in message_board.subscribers.all():
@@ -51,7 +62,9 @@ def messageboard_subscribe(request, id):
 
     return redirect('messageboard', id=id)
 
-
+def send_email_thread(email_subject, email_body,sub):
+    email=EmailMessage(email_subject, email_body, to=[sub.email])
+    email.send()
 def send_email(message):
     """Function to send email with celery"""
     messageboard=message.messageboard   
@@ -61,11 +74,15 @@ def send_email(message):
         
         email_subject=f'New Message from {message.author.profile.name}'
         email_body=f'Seems like \n you received a new message from {message.author.profile.name}'
-        send_email_task.delay(email_subject,email_body,sub.email)
+        #send_email_task.delay(email_subject,email_body,sub.email)
+        email_thread=threading.Thread(target=send_email_thread, args=(email_subject,email_body,sub))
+        email_thread.start()
+                
+   
 
 '''    
-                email_thread=threading.Thread(target=send_email_thread, args=(email_subject,email_body,sub))
-                email_thread.start()
+            email_thread=threading.Thread(target=send_email_thread, args=(email_subject,email_body,sub))
+            email_thread.start()
                 
             except:
                 pass   
@@ -91,3 +108,5 @@ celery -A a_core beat -l info --scheduler django_c
 elery_beat.schedulers:Data
 baseScheduler
 '''
+
+
