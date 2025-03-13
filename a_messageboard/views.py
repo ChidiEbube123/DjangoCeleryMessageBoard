@@ -12,10 +12,12 @@ from django.core.cache import cache
 
 @login_required
 def aal_subs(request):
-    message_boards = cache.get('message_boards') 
+    cache_key='message_boards'
+    message_boards = cache.get(cache_key) 
     if not message_boards:
         message_boards = MessageBoard.objects.all()  # Expensive DB query
-        cache.set('message_boards', message_boards, timeout=60*10) 
+        cache_key=f'message_boards{message_boards.count}'
+        cache.set(cache_key, message_boards, timeout=60*15) 
     return render(request, 'a_messageboard/messageboards.html', {'message_boards':message_boards})
 
 @cache_page(60 * 60)  # Cache for 15 minutes
@@ -30,10 +32,12 @@ def create_messageboard(request):
     return render(request, 'a_messageboard/create_messageboard.html', {'form': form})
 @login_required
 def messageboard_view(request, id):
-    message_board=cache.get('chats')
+    cache_key="chats"
+    message_board=cache.get(cache_key)
     if not message_board:
         message_board=get_object_or_404(MessageBoard,id=id)
-        cache.set('chats', message_board, timeout=60*10)
+        cache_key=f"chats{message_board.id}"
+        cache.set(cache_key, message_board, timeout=60*10)
     form=MessageCreateForm()
     if request.method=="POST":
         if request.user in message_board.subscribers.all():
@@ -44,7 +48,7 @@ def messageboard_view(request, id):
                 message.messageboard=message_board
                 message.save()
                 send_email(message)
-                return redirect('messageboard')
+                return redirect('messageboard', id=id)
         else:
             messages.warning(request, "You must be subscribed to message")
 
