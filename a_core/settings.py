@@ -81,27 +81,27 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'a_core.wsgi.application'
-'''
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",#corr
-        "NAME":  "railway", #youll name it
-        "USER":"postgres", #default postgrers
-        "PASSWORD": os.environ.get("DB_PASSWORD"),
-        "HOST":  "autorack.proxy.rlwy.net", #urdatabase1-4
+        "NAME":  "thedb",
+        "USER":"postgres", 
+        "PASSWORD": "1910_Lionelmasia",
+        "HOST":  "database-2.cdqeqesumfb0.us-east-1.rds.amazonaws.com", #urdatabase1-4
         "PORT": "5432",
     }
 }
-'''
+
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
-
-DATABASES = {
+'''DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+'''
 
 
 
