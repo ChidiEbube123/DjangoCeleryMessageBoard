@@ -169,7 +169,7 @@ class Profile(models.Model):
         """Returns the profile picture URL if set; otherwise, returns a default avatar."""
         if self.image:  # If a profile image exists, return its URL
             return self.image.url
-        return f'{settings.MEDIA_URL}{self.default_image_path}'
+        return f'{self.default_image_path}'
 
     def get_default_avatar(self):
         """Caches and returns a random profile image only when the profile is first created."""
