@@ -23,6 +23,9 @@
       "src": "/(.*)",
       "dest": "a_core/wsgi.py"
       
-    }
+    },
+    { "src": "/media/(.*)", "dest": "/media/$1" }
+
   ]
+  
 }
