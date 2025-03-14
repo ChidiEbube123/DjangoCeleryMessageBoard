@@ -7,11 +7,10 @@ import random
 # Function to select a random default profile picture from the "static/Profiles" folder
 def rand_profile():
     """Returns a random profile image from static/Profiles (only used at profile creation)."""
-    profiles_path = os.path.join(settings.BASE_DIR, 'static/Profiles')  # Path to profile images folder
-
+    profiles_path = os.path.join(settings.MEDIA_ROOT, 'Profiles')  # Use MEDIA_ROOT instead of STATICFILES_DIRS
     # Check if the folder exists and has files inside it
     if os.path.exists(profiles_path) and os.listdir(profiles_path):
-        return 'Profiles/' + random.choice(os.listdir(profiles_path))  # Select a random image
+        return '/Profiles/' + random.choice(os.listdir(profiles_path))  # Select a random image
 
     return 'images/avatar.svg'  # Fallback to a default image if the folder is empty or missing
 

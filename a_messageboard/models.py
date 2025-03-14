@@ -8,9 +8,9 @@ from django.core.cache import cache
 
 def rand_messageboard_image():
     """Returns a random image from static/messageboard_images (used only at creation)."""
-    images_path = os.path.join(settings.BASE_DIR, 'static/DP')
+    images_path = os.path.join(settings.MEDIA_ROOT, 'DP')  # Use MEDIA_ROOT instead of STATICFILES_DIRS
     if os.path.exists(images_path) and os.listdir(images_path):
-        return 'DP/' + random.choice(os.listdir(images_path))
+        return '/DP/' + random.choice(os.listdir(images_path))
     return 'images/default.avif'  # Fallback default image
 
 class MessageBoard(models.Model):
