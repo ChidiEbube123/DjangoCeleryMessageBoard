@@ -152,7 +152,7 @@ def rand_profile():
 # Profile model linked to Django's built-in User model
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)  # One-to-one relation with User model
-    image = models.ImageField(upload_to='avatars/',default='Profile/cs10935977787421606691.png', null=True, blank=True)  # Profile picture (optional)
+    image = models.ImageField(upload_to='avatars/',default='Profiles/cs10935977787421606691.png', null=True, blank=True)  # Profile picture (optional)
     displayname = models.CharField(max_length=20, null=True, blank=True)  # Display name (optional)
     info = models.TextField(null=True, blank=True)  # Additional profile information (optional)
 
