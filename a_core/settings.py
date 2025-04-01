@@ -34,8 +34,7 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'a_messageboard',
-    "whitenoise.runserver_nostatic",
-
+    "storages",
     # My apps
     'a_home',
     'a_users',
@@ -45,7 +44,6 @@ INSTALLED_APPS = [
 SITE_ID = 1
 
 MIDDLEWARE = [
-    "whitenoise.middleware.WhiteNoiseMiddleware",  # Add this line
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -81,15 +79,14 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'a_core.wsgi.application'
-'''
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",#corr
-        "NAME":  "thedb",
-        "USER":"postgres", 
-        "PASSWORD": "1910_Lionelmasia",
-        "HOST":  "database-2.cdqeqesumfb0.us-east-1.rds.amazonaws.com", #urdatabase1-4
-        "PORT": "5432",
+  "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME":  "railway",
+        "USER":"postgres",
+        "PASSWORD":os.environ.get("DB_PASSWORD"),
+        "HOST":  "yamabiko.proxy.rlwy.net",
+        "PORT": "53638",
     }
 }
 '''
@@ -101,6 +98,7 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+'''
 
 
 
@@ -123,7 +121,18 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+STORAGES = {
 
+    # Media file (image) management   
+    "default": {
+        "BACKEND": "storages.backends.s3boto3.S3StaticStorage",
+    },
+    
+    # CSS and JS file management
+    "staticfiles": {
+        "BACKEND": "storages.backends.s3boto3.S3StaticStorage",
+    },
+}
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
@@ -138,17 +147,30 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
-
+'''
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [ BASE_DIR / 'static' ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles_build', 'static')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+'''
+STATIC_URL = 'static/'
 
+STATICFILES_DIRS = [BASE_DIR / 'static']
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media' 
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AWS_ACCESS_KEY_ID = 'AKIAWTZMO3TXW6EYTEZH' 
+AWS_SECRET_ACCESS_KEY = 'ZrxV9aOTurhMacRifCJrHpgBmSTidOkQ9rUUdJfB' 
+
+
+AWS_STORAGE_BUCKET_NAME = 'almostredditbucket' # - Enter your S3 bucket name HERE
+
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+
+AWS_S3_FILE_OVERWRITE = False
 
 LOGIN_REDIRECT_URL = '/'
 
