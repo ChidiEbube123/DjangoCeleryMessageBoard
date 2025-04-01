@@ -163,7 +163,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AWS_ACCESS_KEY_ID = os.environ.get("AWS_ACCESS_KEY_ID") 
-AWS_SECRET_ACCESS_KEY = os.environ.get("AWS_SECRET_ACCESS_ID") 
+AWS_SECRET_ACCESS_KEY = os.environ.get("AA") 
 
 #AAAA
 AWS_STORAGE_BUCKET_NAME = 'almostredditbucket' # - Enter your S3 bucket name HERE
